@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Length_of_Service__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(
+    ISBLANK(Employment_Start_Date__c),
+    &quot;&quot;,
+    TEXT(
+        YEAR(TODAY()) - YEAR(Employment_Start_Date__c)
+        - IF(
+            DATE(YEAR(TODAY()), MONTH(Employment_Start_Date__c), DAY(Employment_Start_Date__c)) &gt; TODAY(),
+            1,
+            0
+        )
+    )
+    &amp; &quot; years, &quot;
+    &amp; TEXT(
+        MOD(
+            MONTH(TODAY()) - MONTH(Employment_Start_Date__c)
+            - IF(DAY(TODAY()) &lt; DAY(Employment_Start_Date__c), 1, 0)
+            + 12,
+            12
+        )
+    )
+    &amp; &quot; months&quot;
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Length of Service</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

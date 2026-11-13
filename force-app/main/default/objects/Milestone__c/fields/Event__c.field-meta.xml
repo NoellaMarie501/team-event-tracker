@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Links this milestone to the event organized to celebrate it. A milestone can be associated with one event or remain unlinked if no celebration has been planned.</description>
+    <inlineHelpText>Links this milestone to the event organized to celebrate it. A milestone can be associated with one event or remain unlinked if no celebration has been planned.</inlineHelpText>
+    <label>Event</label>
+    <referenceTo>Event__c</referenceTo>
+    <relationshipLabel>Milestones</relationshipLabel>
+    <relationshipName>Milestones</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

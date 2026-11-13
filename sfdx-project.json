@@ -5,7 +5,7 @@
       "default": true
     }
   ],
-  "name": "team-event-tracker-scaffold",
+  "name": "team-event-tracker",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "67.0"

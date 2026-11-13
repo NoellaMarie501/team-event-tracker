@@ -1,6 +1,7 @@
 
 # Salesforce CLI local files
 .sf/
+.sfdx/
 
 # Salesforce local configuration
 .localdevserver/

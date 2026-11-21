@@ -7,7 +7,7 @@ public with sharing class RecurringMilestoneService {
     Date today = Date.today();
     Date windowEnd = today.addDays(30);
 
-    // get all employees that qualify for recurring milestone creation i.e having a birthday or annivesary date
+    // get all active employees that qualify for recurring milestone creation i.e having a birthday or annivesary date
     List<Employee__c> employees = [
       SELECT
         Id,
@@ -55,6 +55,57 @@ public with sharing class RecurringMilestoneService {
           potentialMilestones.add(anniversary);
         }
       }
+    }
+
+    //employee IDs for recurring milestones
+    Set<Id> employeeIds = new Set<Id>();
+    for (Milestone__c milestone : potentialMilestones) {
+      employeeIds.add(milestone.Employee__c);
+    }
+
+    // Retrieve existing recurring milestones for these employees to check for duplicates
+    List<Milestone__c> existingMilestones = [
+      SELECT Employee__c, Milestone_Category__c, Occurrence_Year__c
+      FROM Milestone__c
+      WHERE
+        Employee__c IN :employeeIds
+        AND Milestone_Type__c = 'Recurring'
+        AND Milestone_Category__c IN ('Birthday', 'Work Anniversary')
+    ];
+
+    // Build composite keys for existing milestones
+    Set<String> existingMilestoneKeys = new Set<String>();
+
+    for (Milestone__c milestone : existingMilestones) {
+      String key =
+        String.valueOf(milestone.Employee__c) +
+        '|' +
+        milestone.Milestone_Category__c +
+        '|' +
+        String.valueOf(milestone.Occurrence_Year__c.intValue());
+
+      existingMilestoneKeys.add(key);
+    }
+
+    // Keep only potential milestones that don't already exist
+    List<Milestone__c> milestonesToInsert = new List<Milestone__c>();
+
+    for (Milestone__c potential : potentialMilestones) {
+      String key =
+        String.valueOf(potential.Employee__c) +
+        '|' +
+        potential.Milestone_Category__c +
+        '|' +
+        String.valueOf(potential.Milestone_Date__c.year());
+
+      if (!existingMilestoneKeys.contains(key)) {
+        milestonesToInsert.add(potential);
+      }
+    }
+
+    // Insert new milestones
+    if (!milestonesToInsert.isEmpty()) {
+      insert milestonesToInsert;
     }
   }
 

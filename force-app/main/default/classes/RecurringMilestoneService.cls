@@ -1,10 +1,12 @@
 public with sharing class RecurringMilestoneService {
   //recurring milestone generator
   public static void generateUpcomingMilestones() {
-    //use today's date as our target date for recurring milestone creation
-    //then use a 30-day lookahead window for upcoming milestones
-    //this can be parameterized in future as needed
-    Date today = Date.today();
+    generateUpcomingMilestones(Date.today());
+  }
+
+  //use the given date as our target date for recurring milestone creation
+  //then use a 30-day lookahead window for upcoming milestones
+  public static void generateUpcomingMilestones(Date today) {
     Date windowEnd = today.addDays(30);
 
     // get all active employees that qualify for recurring milestone creation i.e having a birthday or annivesary date

@@ -343,6 +343,47 @@ private class RecurringMilestoneServiceTest {
     );
   }
 
+  // Feb 29 birthday falls back to Feb 28 when the occurrence year is not a leap year
+  @IsTest
+  static void shouldUseFeb28_WhenLeapDayBirthdayInNonLeapYear() {
+    // Given: 2027 is not a leap year, and Feb 28 is 18 days after the reference date
+    Date referenceDate = Date.newInstance(2027, 2, 10);
+    Employee__c employee = insertEmployee(
+      'LeapDay',
+      'User',
+      Date.newInstance(2000, 2, 29),
+      null
+    );
+
+    // When
+    Test.startTest();
+    RecurringMilestoneService.generateUpcomingMilestones(referenceDate);
+    Test.stopTest();
+
+    // Then
+    List<Milestone__c> milestones = queryMilestones(employee.Id);
+    Assert.areEqual(
+      1,
+      milestones.size(),
+      'One birthday milestone should be created for a leap day birthday.'
+    );
+    Assert.areEqual(
+      'Birthday',
+      milestones[0].Milestone_Category__c,
+      'The created milestone should be a birthday.'
+    );
+    Assert.areEqual(
+      Date.newInstance(2027, 2, 28),
+      milestones[0].Milestone_Date__c,
+      'The Feb 29 birthday should fall on Feb 28 in a non-leap year.'
+    );
+    Assert.areEqual(
+      2027,
+      milestones[0].Occurrence_Year__c.intValue(),
+      'The occurrence year should be 2027.'
+    );
+  }
+
   private static Employee__c insertEmployee(
     String firstName,
     String lastName,
